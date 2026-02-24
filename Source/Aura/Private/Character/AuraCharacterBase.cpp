@@ -11,6 +11,13 @@ AAuraCharacterBase::AAuraCharacterBase()
 	weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	weapon->SetupAttachment(GetMesh(), "WeaponHandSocket");
 	weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+}
+
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 // Called when the game starts or when spawned
