@@ -31,6 +31,9 @@ private:
 
 	void Move(const struct FInputActionValue& InputActionValue);
 	void CursorTrce();
-	TObjectPtr<IEnemyInterface> LastActor;
-	TObjectPtr<IEnemyInterface> ThisActor;
+	/*这边视频中为注释过的代码，但是由于报错，修改为下面代码*/
+	//TObjectPtr<IEnemyInterface> LastActor;
+	//TObjectPtr<IEnemyInterface> ThisActor;
+	IEnemyInterface* LastActor;
+	IEnemyInterface* ThisActor;
 };
