@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Input/AuraInputConfig.h"
 #include "AuraPlayerController.generated.h"
 class UInputMappingContext;
 class UInputAction;
@@ -31,9 +32,13 @@ private:
 
 	void Move(const struct FInputActionValue& InputActionValue);
 	void CursorTrce();
-	/*这边视频中为注释过的代码，但是由于报错，修改为下面代码*/
-	//TObjectPtr<IEnemyInterface> LastActor;
-	//TObjectPtr<IEnemyInterface> ThisActor;
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
+
+	void AbilityInputPressed(FGameplayTag InputTag);
+	void AbilityInputReleased(FGameplayTag InputTag);
+	void AbilityInputHeld(FGameplayTag InputTag);
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UAuraInputConfig> InputConfig;
 };
