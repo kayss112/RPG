@@ -23,6 +23,13 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+FVector AAuraCharacterBase::GetCombatSocketLocation()
+{
+	check(weapon);
+	FVector ans = weapon->GetSocketLocation(WeaponTipSocketName);
+	return ans;
+}
+
 // Called when the game starts or when spawned
 void AAuraCharacterBase::BeginPlay()
 {

@@ -25,10 +25,25 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrce();
+	AutoRun();
 }
+void AAuraPlayerController::AutoRun()
+{
+	if (!bAutoRunning) { return; }
+	if(APawn* ControlledPawn = GetPawn()) {
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector WorldDirection = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		ControlledPawn->AddMovementInput(WorldDirection);
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		if (DistanceToDestination <= AutoRunAcceptanceRadius) {
+			bAutoRunning = false;
+		}
+	}
+}
+
 void AAuraPlayerController::CursorTrce()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) { return; }
 	LastActor = ThisActor;
@@ -79,8 +94,9 @@ void AAuraPlayerController::AbilityInputReleased(FGameplayTag InputTag)
 				Spline->ClearSplinePoints();
 				for(const FVector& PointLoc : NavPath->PathPoints) {
 					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
+					//DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
 				}
+				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 				bAutoRunning = true;
 			}
 		}
@@ -105,9 +121,8 @@ void AAuraPlayerController::AbilityInputHeld(FGameplayTag InputTag)
 	else {
 		FollowTime += GetWorld()->GetDeltaSeconds();
 
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, false,Hit)) {
-			CachedDestination = Hit.ImpactPoint;
+		if (CursorHit.bBlockingHit) {
+			CachedDestination = CursorHit.ImpactPoint;
 		}
 
 		if (APawn* ControlledPawn = GetPawn()) {
@@ -125,8 +140,6 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 	}
 	return AuraAbilitySystemComponent;
 }
-
-
 
 void AAuraPlayerController::BeginPlay()
 {

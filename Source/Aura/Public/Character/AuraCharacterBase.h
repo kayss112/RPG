@@ -24,6 +24,8 @@ public:
 	AAuraCharacterBase();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual FVector GetCombatSocketLocation() override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
@@ -32,6 +34,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TObjectPtr<USkeletalMeshComponent> weapon;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	FName WeaponTipSocketName;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
